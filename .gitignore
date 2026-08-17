@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# User projects (not part of the starter)
+projects/*
+!projects/.gitkeep
+
+# Local vendor clones
+vendor/
+
+# Prototype worktrees
+.worktrees/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local

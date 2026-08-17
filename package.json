@@ -1,0 +1,32 @@
+{
+  "name": "adonay-design-os",
+  "version": "1.0.0",
+  "description": "Adonay Design OS — a daily design machine for Cursor: IC work, mentoring, and reviews.",
+  "type": "module",
+  "bin": {
+    "design": "./.design-os/bin/design.js"
+  },
+  "files": [
+    ".design-os/",
+    ".cursor/",
+    "context/",
+    "projects/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "init": "node ./.design-os/bin/design.js init",
+    "ingest": "node ./.design-os/bin/design.js ingest",
+    "knowledge": "node ./.design-os/bin/design.js knowledge",
+    "review": "node ./.design-os/bin/design.js review",
+    "evaluate": "node ./.design-os/bin/design.js evaluate",
+    "vibe-check": "node ./.design-os/bin/design.js vibe-check",
+    "vibe": "node ./.design-os/bin/design.js vibe",
+    "comment": "node ./.design-os/bin/design.js comment",
+    "doctor": "node ./.design-os/bin/design.js doctor"
+  },
+  "keywords": ["design", "ux", "review", "figma", "cursor", "ai", "enterprise", "b2b"],
+  "license": "MIT",
+  "author": "Adonay Lizardo"
+}
