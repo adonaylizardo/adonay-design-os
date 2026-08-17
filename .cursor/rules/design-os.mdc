@@ -354,8 +354,9 @@ The Claude Code prompt inside vibe-brief must be:
 
 **Proto branches (when `proto_branches: enabled` via `design proto init`):**
 - Outbound prototypes live in `prototypes/<feature>/` (not `insights/prototypes/`, which is inbound vibe-check HTML)
-- Read `prototypes/<feature>/OPTIONS.md` and `BRAND.md` before vibecoding
-- One option = one branch; use `design proto branch create|switch|list`
+- Read `prototypes/<feature>/RATIONALE.md`, `OPTIONS.md`, and `BRAND.md` before vibecoding
+- One option = one git branch with force-added prototype files; save before switching (`design proto branch save`)
+- Use `design proto branch create|switch|list|save`
 
 After prototype is validated, generate `figma-handoff.md`:
 - What was validated
