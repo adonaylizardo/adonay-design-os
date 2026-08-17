@@ -43,12 +43,17 @@ export async function run() {
     'mentoring', 'websites', 'documents', 'artifacts',
     'artifact-review', 'mentoring-notes', 'student-feedback', 'session-log',
     'design-review', 'vibe-brief', 'vibe-check-prompt', 'vibe-check-analysis',
-    'prototypes-readme', 'program-knowledge'
+    'prototypes-readme', 'program-knowledge', 'prototyping'
   ];
   for (const t of templates) {
     const exists = existsSync(join(root, '.design-os', 'templates', `${t}.template.md`));
     allGreen &= check(`template: ${t}.template.md`, exists);
   }
+
+  allGreen &= check(
+    'prototype-app template',
+    existsSync(join(root, '.design-os', 'templates', 'prototype-app', 'package.json'))
+  );
 
   // Scripts
   const scripts = ['new', 'review', 'evaluate', 'ingest', 'knowledge', 'vibe-check', 'vibe', 'comment'];
@@ -88,6 +93,8 @@ export async function run() {
     console.log('    → artifact-review.md + mentoring-notes.md + student-feedback.md');
     console.log('    design vibe <slug> --agent');
     console.log('    → vibe-brief.md + Claude Code prompt generated');
+    console.log('    design proto init <slug> --feature <name>');
+    console.log('    → outbound Vite prototype + proto/<slug>/<feature>/base branch');
     console.log('    design comment <slug>');
     console.log('    → comments posted to Figma\n');
   } else {

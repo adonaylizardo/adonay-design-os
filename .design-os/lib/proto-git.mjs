@@ -1,5 +1,5 @@
-import { execSync, spawnSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'fs';
+import { spawnSync } from 'child_process';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import {
   branchName,
@@ -9,7 +9,8 @@ import {
   isProtoBranchesEnabled,
   getDefaultPort,
 } from './prototyping.mjs';
-import { findWorkspaceRoot, getPackageRoot, readFile, writeFile } from './files.mjs';
+import { findWorkspaceRoot, getPackageRoot, getContextPath, readFile, writeFile } from './files.mjs';
+import { writeBrandArtifacts } from './proto-brand.mjs';
 
 const PROTO_PREFIX = 'proto/';
 
@@ -105,10 +106,51 @@ export function nextPort(slug, rows) {
   return port;
 }
 
+function copyDirRecursive(src, dest) {
+  mkdirSync(dest, { recursive: true });
+  for (const entry of readdirSync(src)) {
+    const srcPath = join(src, entry);
+    const destPath = join(dest, entry);
+    if (statSync(srcPath).isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      cpSync(srcPath, destPath);
+    }
+  }
+}
+
 export function copyPrototypeTemplate(dest) {
-  throw new Error(
-    'Prototype scaffolding is not included in this starter. Use `design vibe <slug>` for a generic HTML + Tailwind brief.'
-  );
+  const templateRoot = join(getPackageRoot(), 'templates', 'prototype-app');
+  if (!existsSync(templateRoot)) {
+    throw new Error(`Prototype template missing: ${templateRoot}`);
+  }
+  copyDirRecursive(templateRoot, dest);
+}
+
+export function enablePrototypingConfig(slug) {
+  const contextPath = getContextPath(slug);
+  const configPath = join(contextPath, 'prototyping.md');
+  const port = getDefaultPort(slug);
+
+  if (existsSync(configPath)) {
+    let content = readFile(configPath);
+    if (!content.includes('proto_branches:')) {
+      content += `\nproto_branches: enabled\n`;
+    } else {
+      content = content.replace(/proto_branches:\s*.+/i, 'proto_branches: enabled');
+    }
+    if (!content.includes('default_port:')) {
+      content += `default_port: ${port}\n`;
+    }
+    writeFile(configPath, content);
+    return configPath;
+  }
+
+  const templatePath = join(getPackageRoot(), 'templates', 'prototyping.template.md');
+  let content = readFile(templatePath);
+  content = content.replace('__PORT__', String(port));
+  writeFile(configPath, content);
+  return configPath;
 }
 
 export function scaffoldPrototype(slug, feature) {
@@ -136,8 +178,12 @@ export function scaffoldPrototype(slug, feature) {
     __PORT__: String(port),
   };
 
-  for (const name of ['package.json', 'vite.config.ts', 'README.md', 'CLAUDE.md', 'OPTIONS.md']) {
+  for (const name of ['package.json', 'vite.config.ts', 'README.md', 'CLAUDE.md', 'OPTIONS.md', 'BRAND.md']) {
     replaceInFile(join(dest, name), replacements);
+  }
+
+  for (const rel of ['src/App.tsx']) {
+    replaceInFile(join(dest, rel), replacements);
   }
 
   const pkgPath = join(dest, 'package.json');
@@ -149,7 +195,34 @@ export function scaffoldPrototype(slug, feature) {
 
   mkdirSync(join(dest, 'v0-export'), { recursive: true });
 
+  writeBrandArtifacts(slug, dest);
+
   return dest;
+}
+
+export function branchExists(name) {
+  const result = spawnSync('git', ['rev-parse', '--verify', name], {
+    cwd: findWorkspaceRoot(),
+    encoding: 'utf-8',
+  });
+  return result.status === 0;
+}
+
+export function initPrototypeBranch(slug, feature) {
+  if (!isGitRepo()) {
+    return null;
+  }
+
+  const name = branchName(slug, feature, 'base');
+  assertProtoBranch(name);
+
+  if (branchExists(name)) {
+    git(['checkout', name]);
+  } else {
+    git(['checkout', '-b', name]);
+  }
+
+  return name;
 }
 
 export function requireProtoEnabled(slug) {
@@ -179,7 +252,7 @@ export function createBranch(slug, feature, option, fromOption = 'base') {
   try {
     git(['rev-parse', '--verify', from]);
   } catch {
-    throw new Error(`Source branch ${from} does not exist. Run: design proto init ${slug} ${feature}`);
+    throw new Error(`Source branch ${from} does not exist. Run: design proto init ${slug} --feature ${feature}`);
   }
 
   if (isDirty()) {

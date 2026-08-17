@@ -63,7 +63,7 @@ Johanna Garcia shares a live portfolio and a case-study PDF. `design evaluate` r
 The OS is the shared brain: methodology, B2B patterns, framework selection, mentoring tone. New people clone the starter. They do not inherit your clients. They inherit how you decide.
 
 ### 6. A client design system you actually have access to
-You have the client's Figma library and the DS docs. Drop them into program knowledge with `design knowledge`. Ingest and review cite those tokens, type, and components. Then you open Figma — or a deck — with the same attributes. The argument and the brand stay married. The OS does not build the presentation for you.
+You have the client's Figma library and the DS docs. Drop them into program knowledge with `design knowledge`. Ingest and review cite those tokens, type, and components. Then run `design proto init <slug> --feature <name>` to scaffold an outbound prototype that consumes the same brand attributes plus your PRD — each option on its own git branch. The starter does not ship a client DS; you connect your Figma library or drop the docs. The OS does not build Figma Slides for you.
 
 ## Daily commands
 
@@ -78,7 +78,7 @@ You have the client's Figma library and the DS docs. Drop them into program know
 | `design vibe <slug>` | Write a vibe prototype brief |
 | `design comment <slug>` | Post the review comments to Figma |
 | `design doctor` | Check the workspace and templates |
-| `design proto` | Not included in this starter |
+| `design proto init <slug> --feature <name>` | Scaffold outbound Vite prototype from DS + PRD (branch options) |
 
 `--agent` runs Cursor Agent after the prompt is generated. Without it, open the prompt in `insights/prompts/` and run Agent yourself.
 
@@ -139,7 +139,7 @@ These files shape every output. They are not optional flavor text.
 
 Cursor reads `.cursor/rules/design-os.mdc` when you work under `projects/`.
 
-`projects/` is empty on purpose (only `.gitkeep`). Your real work stays local and is gitignored. Vendor prototype scaffolds are not in this starter.
+`projects/` is empty on purpose (only `.gitkeep`). Your real work stays local and is gitignored. Outbound prototype scaffolds are generated per project under `projects/<slug>/prototypes/` — not shipped as a vendor design system.
 
 ## Feedback
 
