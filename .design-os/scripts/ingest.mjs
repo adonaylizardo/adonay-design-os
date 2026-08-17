@@ -53,15 +53,37 @@ Cite source document and section for every new finding.
 `;
 }
 
+function getRecordingLineValue(briefContent) {
+  const patterns = [
+    /Recording URL or ID[^\n]*:\s*(\S+)/i,
+    /Recording ID or URL[^\n]*:\s*(\S+)/i,
+    /Tella recording ID[^\n]*:\s*(\S+)/i,
+  ];
+  for (const pattern of patterns) {
+    const match = briefContent.match(pattern);
+    if (match?.[1]) return match[1];
+  }
+  return null;
+}
+
+function hasRecordingLink(briefContent) {
+  if (!briefContent) return false;
+  if (/tella\.tv|loom\.com|fathom\.video/i.test(briefContent)) return true;
+  if (/https?:\/\/[^\s]*granola/i.test(briefContent) || /granola\./i.test(briefContent)) return true;
+  return Boolean(getRecordingLineValue(briefContent));
+}
+
+function looksLikeTella(briefContent) {
+  if (!briefContent) return false;
+  if (briefContent.toLowerCase().includes('tella.tv')) return true;
+  if (/Tella recording ID[^\n]*:\s*\S+/i.test(briefContent)) return true;
+  const recordingValue = getRecordingLineValue(briefContent);
+  return Boolean(recordingValue && /tella/i.test(recordingValue));
+}
+
 function generateIngestPrompt(slug, briefContent, hasProgramKnowledge, docFiles) {
-  const hasTella = briefContent && (
-    briefContent.toLowerCase().includes('tella.tv') ||
-    /Tella recording ID[^\n]*:[ \t]*\S+/i.test(briefContent)
-  );
-  const hasRecordingLink = briefContent && (
-    /tella\.tv|loom\.com|granola|fathom\.video/i.test(briefContent) ||
-    /recording ID(?:\/URL)?[^\n]*:[ \t]*\S+/i.test(briefContent)
-  );
+  const hasRecording = hasRecordingLink(briefContent);
+  const hasTella = looksLikeTella(briefContent);
 
   const programKnowledgeBlock = hasProgramKnowledge
     ? generateProgramKnowledgeSection(slug, docFiles)
@@ -93,16 +115,16 @@ projects/${slug}/context/brief.md
 It has three sections:
 - **Brief** — free text from client, email, Slack, PDF
 - **Jira Tickets** — pasted ticket content (title, description, acceptance criteria)
-- **Feedback Transcript** — pasted text OR a recording ID/URL from Tella, Loom, Granola, Fathom, or another recorder
+- **Feedback Transcript** — pasted text OR a recording URL/ID from any connected recorder (Tella, Loom, Granola, Fathom, etc.)
 
 ${hasTella ? `## Step 4 — Fetch Tella transcript
-brief.md appears to contain a Tella recording ID or URL.
+brief.md appears to contain a Tella recording URL or ID.
 Use \`mcp_tella_list_videos\` to find the recording, then \`mcp_tella_get_cut_transcript\` to get the transcript.
 Extract: pain points, explicit requests, implicit needs, open questions, verbatim quotes.
-` : hasRecordingLink ? `## Step 4 — Fetch recorder transcript
-brief.md appears to contain a recording ID or URL (Loom, Granola, Fathom, or another recorder).
-If a recorder MCP is connected in Cursor, use it to fetch the transcript. Do not invent tool names.
-If no recorder MCP is connected, read the pasted transcript from the brief.md Feedback Transcript section.
+` : hasRecording ? `## Step 4 — Fetch or read transcript
+brief.md appears to contain a recording URL or ID (not Tella).
+If a recorder MCP is connected in Cursor (Loom, Granola, Fathom, or another tool), use it to fetch the transcript. Do not invent tool names for recorders that are not connected.
+If no recorder MCP is available, read the pasted transcript text from the brief.md Feedback Transcript section.
 Extract: pain points, explicit requests, implicit needs, open questions, verbatim quotes.
 ` : `## Step 4 — Process transcript
 Read the transcript text directly from the brief.md Feedback Transcript section.

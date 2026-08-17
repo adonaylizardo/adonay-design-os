@@ -72,15 +72,16 @@ Wait for confirmation. Then show your work before finalizing — display the fra
 
 The OS consumes a transcript. It does not ship a Loom, Granola, or Fathom MCP. Auto-fetch is whatever recorder MCP the user connected in Cursor. If none is connected, paste the transcript into `brief.md`.
 
-Adonay’s wired example is **Tella**:
+Adonay uses **Tella**. When Tella is connected, example tools:
 - `mcp_tella_get_uncut_transcript` — get full transcript from a recording
 - `mcp_tella_get_cut_transcript` — get edited transcript
 - `mcp_tella_list_videos` — list available recordings
-- Use for: extracting stakeholder feedback, client calls, user research sessions
 
-Loom, Granola, Fathom, or another tool: use that MCP if it is connected in Cursor. Do not invent tool names. If no recorder MCP is connected, paste the transcript into `brief.md`.
+For **Loom, Granola, Fathom, or another recorder**: use that MCP if connected; otherwise paste the transcript into `brief.md`. Do not invent tool names for recorders that are not connected.
 
-**Activation:** If `brief.md` contains a recording URL or ID for a connected recorder, fetch the transcript. Otherwise read the pasted transcript.
+Use for: extracting stakeholder feedback, client calls, user research sessions.
+
+**Activation:** If `brief.md` has a recording URL/ID for a connected recorder, fetch the transcript via that MCP. Otherwise read the pasted transcript from the Feedback Transcript section.
 
 ### Jira — Manual Input
 - Jira tickets are pasted manually into `brief.md`
@@ -142,8 +143,8 @@ Read `projects/<slug>/context/brief.md`. It contains three sections:
 
 **Jira Tickets section:** Pasted ticket text — title, description, acceptance criteria. If multiple tickets, extract from all and synthesize. No MCP needed.
 
-**Feedback Transcript section:** Either pasted text OR a recording ID/URL from Tella, Loom, Granola, Fathom, or another connected recorder.
-- If a recording URL/ID is present for a connected recorder: fetch the transcript (Tella example: `mcp_tella_get_cut_transcript`)
+**Feedback Transcript section:** Either pasted text OR a recording URL/ID (Tella, Loom, Granola, Fathom, or whatever recorder MCP is connected).
+- If brief has a recording URL/ID for a connected recorder: fetch via that MCP (Tella example: `mcp_tella_get_cut_transcript`)
 - If no recorder MCP is connected: read the pasted transcript from `brief.md`
 - Extract: pain points, explicit requests, implicit needs, open questions, verbatim quotes
 
