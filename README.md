@@ -13,7 +13,9 @@ This repo is a **from-zero starter**. No client projects, no mentee folders, no 
 You stop being the person who "makes the screens." You become the person who can name the real problem in the room.
 
 - **Mornings get a ritual.** A new piece of work is a project, not a Slack thread. Brief in, diagnosis out, then design.
-- **Reviews get sharper.** Comments land on the frame that is wrong, with a reason, not "can we make this pop."
+- **The rationale is the project's, not yours.** Brief, transcripts, and reference docs go in. The argument cites that material — a Slack thread or a fat program-knowledge folder. Not taste.
+- **Reviews get sharper.** Comments land on the Figma file, pinned to a node, tied to evidence — not "make it pop." You ask the OS to post them.
+- **A client design system is fuel, not a skin.** Drop the DS docs into program knowledge with `design knowledge`. The OS uses those tokens, type, and components when it writes the rationale. Take that into a deck or a prototype and the brand attributes stay married to the argument. This starter does not ship a client DS — you connect your Figma library or drop the docs.
 - **Stakeholders get cheaper tests.** Before a big build, you already have a zero-budget way to see if the assumption is real.
 - **AI stays in its lane.** It writes v1. Your judgment writes v2 through v10. The OS decides what to ask and what to reject.
 - **Mentoring stops being vibes.** A student leaves with a file they can act on. You keep the notes they should not see.
@@ -60,13 +62,16 @@ Johanna Garcia shares a live portfolio and a case-study PDF. `design evaluate` r
 ### 5. Teaching a team to think the same way
 The OS is the shared brain: methodology, B2B patterns, framework selection, mentoring tone. New people clone the starter. They do not inherit your clients. They inherit how you decide.
 
+### 6. A client design system you actually have access to
+You have the client's Figma library and the DS docs. Drop them into program knowledge with `design knowledge`. Ingest and review cite those tokens, type, and components. Then you open Figma — or a deck — with the same attributes. The argument and the brand stay married. The OS does not build the presentation for you.
+
 ## Daily commands
 
 | Command | What it is for |
 |---------|----------------|
 | `design init "Name"` | Start a project under `projects/` |
 | `design ingest <slug>` | Turn a brief into PRD + research |
-| `design knowledge <slug>` | Index reference docs into program knowledge |
+| `design knowledge <slug>` | Index reference docs — including a client DS — into program knowledge |
 | `design review <slug>` | Review a Figma file against intent |
 | `design evaluate <slug>` | Mentor on websites, docs, portfolios |
 | `design vibe-check <slug>` | Triage a stakeholder vibe prototype |
