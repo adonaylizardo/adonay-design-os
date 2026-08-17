@@ -78,7 +78,8 @@ You have the client's Figma library and the DS docs. Drop them into program know
 | `design vibe <slug>` | Write a vibe prototype brief |
 | `design comment <slug>` | Post the review comments to Figma |
 | `design doctor` | Check the workspace and templates |
-| `design proto init <slug> --feature <name>` | Scaffold outbound Vite prototype from DS + PRD (branch options) |
+| `design proto …` | Scaffold outbound Vite prototype from DS + PRD (branch options) |
+| `npm run proto -- …` | Same as `design proto` when the CLI is not linked globally |
 
 `--agent` runs Cursor Agent after the prompt is generated. Without it, open the prompt in `insights/prompts/` and run Agent yourself.
 
@@ -139,7 +140,7 @@ These files shape every output. They are not optional flavor text.
 
 Cursor reads `.cursor/rules/design-os.mdc` when you work under `projects/`.
 
-`projects/` is empty on purpose (only `.gitkeep`). Your real work stays local and is gitignored. Outbound prototype scaffolds are generated per project under `projects/<slug>/prototypes/` — not shipped as a vendor design system.
+`projects/` is empty on purpose (only `.gitkeep`). Your real work stays local and is gitignored. Outbound prototype scaffolds live under `projects/<slug>/prototypes/` — each option is a git branch that force-adds only that prototype path (main stays clean). Inbound stakeholder HTML stays in `insights/prototypes/`.
 
 ## Feedback
 

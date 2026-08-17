@@ -11,8 +11,14 @@ import {
 } from './prototyping.mjs';
 import { findWorkspaceRoot, getPackageRoot, getContextPath, readFile, writeFile } from './files.mjs';
 import { writeBrandArtifacts } from './proto-brand.mjs';
+import { writePrdArtifacts } from './proto-prd.mjs';
 
 const PROTO_PREFIX = 'proto/';
+
+/** Relative path from workspace root for a prototype tree (force-added on proto branches). */
+export function prototypeRelPath(slug, feature) {
+  return `projects/${slug}/prototypes/${feature}`;
+}
 
 export function git(args, opts = {}) {
   const cwd = opts.cwd || findWorkspaceRoot();
@@ -178,7 +184,15 @@ export function scaffoldPrototype(slug, feature) {
     __PORT__: String(port),
   };
 
-  for (const name of ['package.json', 'vite.config.ts', 'README.md', 'CLAUDE.md', 'OPTIONS.md', 'BRAND.md']) {
+  for (const name of [
+    'package.json',
+    'vite.config.ts',
+    'index.html',
+    'README.md',
+    'CLAUDE.md',
+    'OPTIONS.md',
+    'BRAND.md',
+  ]) {
     replaceInFile(join(dest, name), replacements);
   }
 
@@ -196,8 +210,35 @@ export function scaffoldPrototype(slug, feature) {
   mkdirSync(join(dest, 'v0-export'), { recursive: true });
 
   writeBrandArtifacts(slug, dest);
+  writePrdArtifacts(slug, feature, dest);
 
   return dest;
+}
+
+/**
+ * Force-add and commit the prototype tree on the current branch.
+ * Scoped to projects/<slug>/prototypes/<feature>/ so other projects stay gitignored.
+ * @param {string} slug
+ * @param {string} feature
+ * @param {string} message
+ */
+export function commitPrototypeTree(slug, feature, message) {
+  if (!isGitRepo()) return null;
+
+  const rel = prototypeRelPath(slug, feature);
+  const abs = getPrototypePath(slug, feature);
+  if (!existsSync(abs)) {
+    throw new Error(`Prototype path missing: ${abs}`);
+  }
+
+  git(['add', '-f', rel]);
+  const status = git(['status', '--porcelain', rel]);
+  if (!status.trim()) {
+    return null;
+  }
+
+  git(['commit', '-m', message]);
+  return git(['rev-parse', '--short', 'HEAD']);
 }
 
 export function branchExists(name) {
@@ -215,6 +256,7 @@ export function initPrototypeBranch(slug, feature) {
 
   const name = branchName(slug, feature, 'base');
   assertProtoBranch(name);
+  const previous = currentBranch();
 
   if (branchExists(name)) {
     git(['checkout', name]);
@@ -222,7 +264,17 @@ export function initPrototypeBranch(slug, feature) {
     git(['checkout', '-b', name]);
   }
 
-  return name;
+  const sha = commitPrototypeTree(
+    slug,
+    feature,
+    `proto(${slug}/${feature}): scaffold base option`
+  );
+
+  if (sha) {
+    console.log(`   Committed prototype files on ${name} (${sha})`);
+  }
+
+  return { name, previous };
 }
 
 export function requireProtoEnabled(slug) {
@@ -233,11 +285,47 @@ export function requireProtoEnabled(slug) {
   }
 }
 
-export function checkoutBranch(name) {
-  assertProtoBranch(name);
-  if (isDirty()) {
-    throw new Error('Working tree has uncommitted changes. Commit or stash before switching branches.');
+export function isDirtyOutsidePrototype(slug, feature) {
+  const rel = prototypeRelPath(slug, feature);
+  const lines = git(['status', '--porcelain']).split('\n').filter(Boolean);
+  return lines.some((line) => {
+    const path = line.slice(3).trim();
+    return path && !path.startsWith(rel);
+  });
+}
+
+export function hasUnsavedPrototypeChanges(slug, feature) {
+  const rel = prototypeRelPath(slug, feature);
+  const lines = git(['status', '--porcelain']).split('\n').filter(Boolean);
+  return lines.some((line) => {
+    const path = line.slice(3).trim();
+    return path.startsWith(rel);
+  });
+}
+
+export function savePrototypeChanges(slug, feature, message) {
+  const sha = commitPrototypeTree(slug, feature, message);
+  if (!sha) {
+    console.log('   No prototype changes to save.');
+    return null;
   }
+  console.log(`✅ Saved prototype on ${currentBranch()} (${sha})`);
+  return sha;
+}
+
+export function checkoutBranch(name, slug, feature) {
+  assertProtoBranch(name);
+
+  if (slug && feature && hasUnsavedPrototypeChanges(slug, feature)) {
+    throw new Error(
+      `Unsaved changes in prototypes/${feature}/. Run: design proto branch save ${slug} --feature ${feature}`
+    );
+  }
+
+  if (isDirtyOutsidePrototype(slug || '', feature || '')) {
+    throw new Error('Working tree has uncommitted changes outside the prototype. Commit or stash before switching.');
+  }
+
   git(['checkout', name]);
 }
 
@@ -255,8 +343,14 @@ export function createBranch(slug, feature, option, fromOption = 'base') {
     throw new Error(`Source branch ${from} does not exist. Run: design proto init ${slug} --feature ${feature}`);
   }
 
-  if (isDirty()) {
-    throw new Error('Commit or stash changes before creating a branch.');
+  if (hasUnsavedPrototypeChanges(slug, feature)) {
+    throw new Error(
+      `Unsaved changes in prototypes/${feature}/. Run: design proto branch save ${slug} --feature ${feature}`
+    );
+  }
+
+  if (isDirtyOutsidePrototype(slug, feature)) {
+    throw new Error('Commit or stash changes outside the prototype before creating a branch.');
   }
 
   try {
@@ -267,6 +361,14 @@ export function createBranch(slug, feature, option, fromOption = 'base') {
   }
 
   git(['checkout', '-b', name, from]);
+  const sha = commitPrototypeTree(
+    slug,
+    feature,
+    `proto(${slug}/${feature}): create option ${option} from ${fromOption}`
+  );
+  if (sha) {
+    console.log(`   Seeded ${name} from ${from} (${sha})`);
+  }
   return name;
 }
 

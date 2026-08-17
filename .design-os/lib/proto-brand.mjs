@@ -14,14 +14,46 @@ const TOKEN_VAR_MAP = {
   border: '--color-border',
 };
 
+const NON_COLOR_PREFIXES = /^(text|space|radius|font|shadow)-/;
+
+/**
+ * Map a parsed token name to a CSS custom property.
+ * @param {string} name
+ * @param {string} value
+ * @returns {string}
+ */
+function toCssVar(name, value) {
+  if (TOKEN_VAR_MAP[name]) return TOKEN_VAR_MAP[name];
+  if (name.startsWith('color-')) return `--${name}`;
+  if (NON_COLOR_PREFIXES.test(name)) return `--${name}`;
+  if (name.startsWith('font-')) return `--${name}`;
+
+  const isColorValue =
+    value.startsWith('#') ||
+    value.startsWith('rgb') ||
+    value.startsWith('hsl') ||
+    /^[a-z]+$/i.test(value);
+
+  if (isColorValue) {
+    return `--color-${name.replace(/^color-/, '')}`;
+  }
+
+  if (value.includes('rem') || value.includes('em') || value.includes('px')) {
+    return `--${name}`;
+  }
+
+  return `--color-${name.replace(/^color-/, '')}`;
+}
+
 /**
  * @param {string} line
  * @returns {{ name: string, value: string }|null}
  */
 function parseTokenLine(line) {
-  const mdMatch = line.match(/^[-*]\s*`?--?([a-z0-9-]+)`?\s*[:=]\s*(.+)$/i);
+  const mdMatch = line.match(/^[-*]\s*`?(--?[a-z0-9-]+)`?\s*[:=]\s*(.+)$/i);
   if (mdMatch) {
-    return { name: mdMatch[1].toLowerCase(), value: mdMatch[2].trim().replace(/`/g, '') };
+    const rawName = mdMatch[1].replace(/^--/, '').toLowerCase();
+    return { name: rawName, value: mdMatch[2].trim().replace(/`/g, '') };
   }
 
   const cssVarMatch = line.match(/^--([a-z0-9-]+)\s*:\s*(.+);?\s*$/i);
@@ -41,26 +73,28 @@ function parseTokenLine(line) {
  * @param {string} content
  * @returns {Map<string, string>}
  */
-function extractTokensFromMarkdown(content) {
+export function extractTokensFromMarkdown(content) {
   const tokens = new Map();
 
   for (const line of content.split('\n')) {
     const parsed = parseTokenLine(line.trim());
     if (!parsed) continue;
 
-    const cssVar = TOKEN_VAR_MAP[parsed.name] || `--color-${parsed.name.replace(/^color-/, '')}`;
-    if (parsed.value.startsWith('#') || parsed.value.startsWith('rgb') || parsed.value.includes('rem')) {
-      tokens.set(cssVar, parsed.value);
-    }
+    const cssVar = toCssVar(parsed.name, parsed.value);
+    tokens.set(cssVar, parsed.value);
   }
 
   const tableRows = [...content.matchAll(/^\|\s*([^|]+)\|\s*([^|]+)\|/gm)];
   for (const row of tableRows) {
-    const key = row[1].trim().toLowerCase();
+    const key = row[1].trim().toLowerCase().replace(/^--/, '');
     const val = row[2].trim();
     if (key.includes('token') || key.includes('name') || key.includes('---')) continue;
+
     if (val.match(/^#[0-9a-fA-F]{3,8}$/)) {
-      const cssVar = TOKEN_VAR_MAP[key.replace(/\s+/g, '-')] || `--color-${key.replace(/\s+/g, '-')}`;
+      const cssVar = toCssVar(key.replace(/\s+/g, '-'), val);
+      tokens.set(cssVar, val);
+    } else if (val.match(/^\d+(\.\d+)?(rem|em|px)$/)) {
+      const cssVar = toCssVar(key.replace(/\s+/g, '-'), val);
       tokens.set(cssVar, val);
     }
   }
@@ -91,7 +125,7 @@ export function collectBrandFromProject(slug) {
   const tokens = new Map();
   const excerpts = [];
 
-  const priority = files.filter((f) => /token|color|type|typography|brand/i.test(f));
+  const priority = files.filter((f) => /token|color|type|typography|brand|spacing|radius/i.test(f));
   const ordered = [...new Set([...priority, ...files])];
 
   for (const filename of ordered) {
@@ -104,7 +138,7 @@ export function collectBrandFromProject(slug) {
 
     const sections = [...content.matchAll(/^##\s+(.+)$/gm)]
       .map((m) => m[1].trim())
-      .filter((s) => /color|typography|type|token|spacing|brand|component/i.test(s));
+      .filter((s) => /color|typography|type|token|spacing|brand|component|radius/i.test(s));
 
     if (sections.length) {
       excerpts.push(`### ${filename}\n`);

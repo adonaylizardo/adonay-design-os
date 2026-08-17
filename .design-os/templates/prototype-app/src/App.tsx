@@ -5,18 +5,15 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <p className="eyebrow">Outbound prototype · __FEATURE__</p>
-        <h1>Validate the interaction, not the polish</h1>
-        <p className="lede">
-          Tokens come from your project design system via program knowledge. Do not restyle from
-          taste — cite constraints in BRAND.md and OPTIONS.md.
-        </p>
+        <h1>__PRD_HEADLINE__</h1>
+        <p className="lede">__PRD_LEDE__</p>
       </header>
 
       <main className="app-main">
         <section className="card">
           <h2>Primary action</h2>
           <p className="muted">
-            Replace this screen with the flow from your PRD. Keep CSS variables from tokens.css.
+            __PRD_FOCUS__ See <code>RATIONALE.md</code> for users, goals, and constraints from the PRD.
           </p>
           <button type="button" className="btn-primary">
             Continue

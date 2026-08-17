@@ -24,7 +24,9 @@
     "vibe-check": "node ./.design-os/bin/design.js vibe-check",
     "vibe": "node ./.design-os/bin/design.js vibe",
     "comment": "node ./.design-os/bin/design.js comment",
-    "doctor": "node ./.design-os/bin/design.js doctor"
+    "doctor": "node ./.design-os/bin/design.js doctor",
+    "proto": "node ./.design-os/bin/design.js proto",
+    "test": "node --test .design-os/test/*.test.mjs"
   },
   "keywords": ["design", "ux", "review", "figma", "cursor", "ai", "enterprise", "b2b"],
   "license": "MIT",
