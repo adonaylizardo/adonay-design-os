@@ -94,7 +94,9 @@ export async function run() {
     console.log('    design vibe <slug> --agent');
     console.log('    → vibe-brief.md + Claude Code prompt generated');
     console.log('    design proto init <slug> --feature <name>');
-    console.log('    → outbound Vite prototype + proto/<slug>/<feature>/base branch');
+    console.log('    → outbound Vite prototype + proto/<slug>/<feature>/base branch (force-adds prototype path)');
+    console.log('    design proto branch save <slug> --feature <name>');
+    console.log('    → commit option edits before switching branches');
     console.log('    design comment <slug>');
     console.log('    → comments posted to Figma\n');
   } else {
