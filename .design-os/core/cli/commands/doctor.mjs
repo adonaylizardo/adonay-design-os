@@ -62,7 +62,7 @@ export async function run() {
   warn('Figma MCP', 'Required for design review + Figma comments + push to Figma');
   warn('Browser MCP', 'Required for design evaluate — live website review');
   warn('Atlassian MCP', 'Optional — enables reading Jira tickets directly');
-  warn('Tella MCP', 'Optional — enables reading recording transcripts directly');
+  warn('Recorder MCP', 'Optional (Tella is Adonay’s; Loom/Granola/Fathom/other also fine) for transcripts');
 
   // .env
   const envExists = existsSync(join(root, '.env'));

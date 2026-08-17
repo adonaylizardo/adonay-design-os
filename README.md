@@ -93,6 +93,14 @@ node .design-os/bin/design.js doctor
 
 For Figma comments, copy `.env.example` to `.env` and add a Figma access token (https://www.figma.com/developers/api#access-tokens). Telemetry is off unless you turn it on.
 
+## Connectors
+
+The OS reads a transcript. It does not care which recorder produced it.
+
+Adonay uses **Tella** (MCP in Cursor). If you use Loom, Granola, Fathom, or another tool, connect that MCP in Cursor the same way, or paste the transcript into `context/brief.md`. Ingest behaves the same after that.
+
+Figma MCP is still the one used for design review.
+
 A first project:
 
 ```bash

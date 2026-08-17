@@ -35,9 +35,9 @@ Copy directly from Jira. Multiple tickets: paste them all, one after another.*
 ## Feedback Transcript
 
 *Option A — Paste the transcript text directly below.*
-*Option B — Provide a Tella recording ID or URL and the agent will fetch it.*
+*Option B — Provide a recording ID or URL from Tella, Loom, Granola, Fathom, or whatever recorder you connected, and the agent will fetch it if that MCP is available.*
 
-Tella recording ID or URL (leave blank if pasting text):
+Recording ID or URL (leave blank if pasting text):
 
 Transcript:
 

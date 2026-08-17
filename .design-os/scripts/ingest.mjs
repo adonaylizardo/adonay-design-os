@@ -2,7 +2,7 @@
 
 /**
  * Ingest command — generates PRD + Research from raw inputs.
- * Reads brief.md (pasted brief + Jira text + optional Tella transcript),
+ * Reads brief.md (pasted brief + Jira text + optional recorder transcript),
  * then writes a Cursor Agent prompt that synthesizes prd.md and research.md.
  *
  * Usage: design ingest [project-slug] [--with-knowledge]
@@ -55,8 +55,12 @@ Cite source document and section for every new finding.
 
 function generateIngestPrompt(slug, briefContent, hasProgramKnowledge, docFiles) {
   const hasTella = briefContent && (
-    briefContent.includes('tella.tv') ||
-    briefContent.match(/Tella recording ID[^\n]*:\s*\S+/)
+    briefContent.toLowerCase().includes('tella.tv') ||
+    /Tella recording ID[^\n]*:[ \t]*\S+/i.test(briefContent)
+  );
+  const hasRecordingLink = briefContent && (
+    /tella\.tv|loom\.com|granola|fathom\.video/i.test(briefContent) ||
+    /recording ID(?:\/URL)?[^\n]*:[ \t]*\S+/i.test(briefContent)
   );
 
   const programKnowledgeBlock = hasProgramKnowledge
@@ -89,11 +93,16 @@ projects/${slug}/context/brief.md
 It has three sections:
 - **Brief** — free text from client, email, Slack, PDF
 - **Jira Tickets** — pasted ticket content (title, description, acceptance criteria)
-- **Feedback Transcript** — pasted text OR a Tella recording ID/URL
+- **Feedback Transcript** — pasted text OR a recording ID/URL from Tella, Loom, Granola, Fathom, or another recorder
 
 ${hasTella ? `## Step 4 — Fetch Tella transcript
 brief.md appears to contain a Tella recording ID or URL.
 Use \`mcp_tella_list_videos\` to find the recording, then \`mcp_tella_get_cut_transcript\` to get the transcript.
+Extract: pain points, explicit requests, implicit needs, open questions, verbatim quotes.
+` : hasRecordingLink ? `## Step 4 — Fetch recorder transcript
+brief.md appears to contain a recording ID or URL (Loom, Granola, Fathom, or another recorder).
+If a recorder MCP is connected in Cursor, use it to fetch the transcript. Do not invent tool names.
+If no recorder MCP is connected, read the pasted transcript from the brief.md Feedback Transcript section.
 Extract: pain points, explicit requests, implicit needs, open questions, verbatim quotes.
 ` : `## Step 4 — Process transcript
 Read the transcript text directly from the brief.md Feedback Transcript section.
