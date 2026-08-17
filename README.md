@@ -126,6 +126,12 @@ Cursor reads `.cursor/rules/design-os.mdc` when you work under `projects/`.
 
 `projects/` is empty on purpose (only `.gitkeep`). Your real work stays local and is gitignored. Vendor prototype scaffolds are not in this starter.
 
+## Feedback
+
+Share how it went in [Discussions](https://github.com/adonaylizardo/adonay-design-os/discussions).
+
+Ask for a change, or report something broken, in [Issues](https://github.com/adonaylizardo/adonay-design-os/issues).
+
 ## License
 
 MIT. Copyright Adonay Lizardo. See LICENSE and NOTICE.
