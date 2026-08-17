@@ -122,7 +122,7 @@ Examples:
   design init "My Project"
   design review my-project --agent
   design vibe-check my-project --agent
-  design evaluate mentoring-alex-rivera --agent
+  design evaluate mentoring-johanna-garcia --agent
   design comment my-project --dry-run
   design doctor
 

@@ -23,9 +23,11 @@ The impact is not more files. It is fewer wasted cycles: fewer pixel debates, fe
 ## Who it is for
 
 - Product designers and ICs in enterprise B2B who have to defend decisions, not just ship mockups
+- Designers receiving vibe-coded prototypes from PMs who want to analyze them properly before anyone scales them
 - Design leads who review other people's Figma and want comments that teach
 - Mentors and academy instructors who review portfolios, case studies, and live sites
 - Anyone using Cursor who wants the agent to follow a methodology, not invent one every chat
+- Any designer who chooses to diagnose before prescribing
 
 If you want a Figma plugin that restyles frames, this is not that. If you want a consultant sitting next to you in Cursor, this is.
 
@@ -37,7 +39,7 @@ If you want a Figma plugin that restyles frames, this is not that. If you want a
 
 **Wednesday.** The file is in review. `design review` reads the Figma against the PRD. You get a short list of comments, pinned to node ids, each with a why. You dry-run them, then post. The designer on the other side sees intent, not taste.
 
-**Thursday.** A mentee, Alex Rivera, sends a portfolio. You init a mentoring project, fill the artifact links, run evaluate. You send `student-feedback.md` as-is. You keep `mentoring-notes.md` for yourself. Next session starts from a log, not from memory.
+**Thursday.** A mentee, Johanna Garcia, sends a portfolio. You init a mentoring project, fill the artifact links, run evaluate. You send `student-feedback.md` as-is. You keep `mentoring-notes.md` for yourself. Next session starts from a log, not from memory.
 
 **Friday.** `design doctor` tells you the machine is still healthy. You did not invent a new process this week. You ran the one you already trust.
 
@@ -53,7 +55,7 @@ The visual craft is fine. The empty, error, and permission states are missing. `
 A PM built something in an AI canvas and wants it "cleaned up in Figma." You run `design vibe-check` first. The OS separates signal from demo-ware. You only move to Figma once the interaction logic is the thing you actually want to polish.
 
 ### 4. Mentoring a designer without a Figma file
-Alex Rivera shares a live portfolio and a case-study PDF. `design evaluate` reviews the artifact, not the person. They get specific, page-level feedback. You get an internal note on the skill to build next. Same methodology as client work, pointed at growth.
+Johanna Garcia shares a live portfolio and a case-study PDF. `design evaluate` reviews the artifact, not the person. They get specific, page-level feedback. You get an internal note on the skill to build next. Same methodology as client work, pointed at growth.
 
 ### 5. Teaching a team to think the same way
 The OS is the shared brain: methodology, B2B patterns, framework selection, mentoring tone. New people clone the starter. They do not inherit your clients. They inherit how you decide.
@@ -114,9 +116,9 @@ design comment checkout-redesign --dry-run
 A first mentee (fictional example):
 
 ```bash
-design init "Mentoring Alex Rivera"
+design init "Mentoring Johanna Garcia"
 # fill mentoring.md, websites.md, and/or documents.md
-design evaluate mentoring-alex-rivera --agent
+design evaluate mentoring-johanna-garcia --agent
 ```
 
 Send `student-feedback.md`. Keep `mentoring-notes.md` internal.
