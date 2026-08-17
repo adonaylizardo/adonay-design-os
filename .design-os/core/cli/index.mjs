@@ -105,7 +105,7 @@ Commands:
   evaluate    Review websites and documents (mentoring)
   vibe-check  Analyze stakeholder vibe-coded prototype (before design)
   vibe        Generate vibe prototype brief
-  proto       Prototype branches (not included in this starter)
+  proto       Scaffold outbound prototype branches (DS + PRD → Vite)
   comment     Post comments to Figma
   doctor      Check system requirements and configuration
 

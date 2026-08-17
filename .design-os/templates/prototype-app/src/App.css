@@ -1,0 +1,123 @@
+.app {
+  min-height: 100vh;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.app-header {
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-primary) 8%, var(--color-surface)) 0%,
+    var(--color-surface) 100%
+  );
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.app-header h1 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  line-height: 1.6;
+}
+
+.app-main {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  max-width: 56rem;
+}
+
+@media (min-width: 720px) {
+  .app-main {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+.card {
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-secondary {
+  background: var(--color-surface);
+}
+
+.card h2 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+.muted {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.btn-primary {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.stack li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.value {
+  font-size: var(--text-sm);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}

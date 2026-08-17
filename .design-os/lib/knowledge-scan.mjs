@@ -196,9 +196,9 @@ ${readingOrder.split('\n').map((l) => `   ${l}`).join('\n')}
 
 | Tema | Fuente que gana | Notas |
 |------|-----------------|-------|
-| Roadmap / gates de diseño | \`case-wrap-designer-onboarding-jun2026.md\` | Más reciente que brief kickoff (jun 10) |
-| Constraints cuantitativos UX | \`gc-pulse-survey-case-wrap.md\` | N=16 GC SMAPs/OVPs |
-| Decisiones de proceso unificado | \`case-wrap-compendium-jan-mar-2026.md\` | Working session mar 17 |
+| Roadmap / gates de diseño | *(doc más reciente en documents/)* | Resolver manualmente al indexar |
+| Constraints cuantitativos UX | *(doc de evidencia cuantitativa)* | Citar métrica y N en program-knowledge |
+| Decisiones de proceso unificado | *(doc de discovery / compendium)* | Actualizar filas con design knowledge --agent |
 
 ---
 
